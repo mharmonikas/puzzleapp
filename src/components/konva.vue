@@ -1,5 +1,3 @@
-
-
 <template>
   <v-stage ref="stage" :config="stageSize">
     <v-layer ref="layer">
@@ -9,7 +7,6 @@
           :config="shape.config"
           @dragend="(event) => dragMove(event, index)"
       />
-
     </v-layer>
   </v-stage>
 </template>
@@ -28,8 +25,6 @@ export default {
         height: height
       },
       isDragging: false,
-      img: null,
-      imageSrc: require('@/assets/puzzle-icon.png'),
       shapeSizes: [
         {
           height: 100,
@@ -563,16 +558,7 @@ export default {
       return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
     },
   },
-  created() {
-    const image = new window.Image()
-    image.src = this.imageSrc
-    image.width=100
-    image.height=100
-    image.onload = () => {
-      // set image only when it is loaded
-      this.img = image
-    }
-  },
+
   computed: {
     rightSideMatch() {
       return this.shapes[this.shapeIndex].right !== this.shapes[this.otherShapeIndex].left
