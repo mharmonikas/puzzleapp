@@ -132,6 +132,10 @@ export default {
           height: 30,
           width: 100
         },
+        {
+          height: 30,
+          width: 100
+        },
       ],
       shapes: [
         {
@@ -262,6 +266,74 @@ export default {
           top: 'out',
           bottom: 'out',
         },
+        {
+          config: {
+            sceneFunc: (context, shape) => {
+              // Define puzzle piece parameters
+              const startX = 20 // X-coordinate where the puzzle piece starts
+              const startY = 20 // Y-coordinate where the puzzle piece starts
+              const pieceWidth = 100 // The width of the puzzle piece
+              const pieceHeight = 30 // The height of the puzzle piece
+              const tabWidth = 20 // The width of the tab on the puzzle piece
+              const tabHeight = 12 // The height of the tab on the puzzle piece
+
+              context.beginPath()
+
+              // Start at the top-left corner of the puzzle piece
+              context.moveTo(startX, startY)
+
+              // Draw the left straight side
+              context.lineTo(startX, startY + pieceHeight)
+
+              // Draw the bottom side with a tab
+              // Left side of the bottom tab
+              context.lineTo(startX + (pieceWidth - tabWidth) / 2, startY + pieceHeight)
+              // Curve out for the tab
+              context.bezierCurveTo(
+                  startX + (pieceWidth - tabWidth) / 2, startY + pieceHeight + tabHeight, // First control point
+                  startX + (pieceWidth + tabWidth) / 2, startY + pieceHeight + tabHeight, // Second control point
+                  startX + (pieceWidth + tabWidth) / 2, startY + pieceHeight // Ending point
+              )
+              // Right side of the bottom tab
+              context.lineTo(startX + pieceWidth, startY + pieceHeight)
+
+              // Draw the right straight side
+              context.lineTo(startX + pieceWidth, startY)
+
+              // Draw the top side with a slot
+              // Right side of the top slot
+              context.lineTo(startX + (pieceWidth + tabWidth) / 2, startY)
+              // Curve in for the slot
+              context.bezierCurveTo(
+                  startX + (pieceWidth + tabWidth) / 2, startY - tabHeight, // First control point
+                  startX + (pieceWidth - tabWidth) / 2, startY - tabHeight, // Second control point
+                  startX + (pieceWidth - tabWidth) / 2, startY // Ending point
+              )
+              // Left side of the top slot
+              context.lineTo(startX, startY)
+
+              // Complete the path
+              context.closePath()
+
+              // Style the shape
+              context.fillStyle = 'pink'
+              context.fill()
+              context.lineWidth = 2
+              context.strokeStyle = 'black'
+              context.stroke()
+              context.fillStrokeShape(shape)
+            },
+            fill: '#00D2FF',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+          },
+          horizontal: true,
+          left: 'empty',
+          right: 'empty',
+          top: 'out',
+          bottom: 'out',
+        },
       ],
       shapeIndex: 0,
       otherShapeIndex: 0,
@@ -290,8 +362,6 @@ export default {
 
           let clip = this.getClip(distance, shapePos, otherShapePos)
 
-          console.log(shapePos.x)
-          console.log(otherShapePos.x)
 
           if (clip === 'top clip') {
             shape.position({
@@ -357,45 +427,7 @@ export default {
        return 'bottom clip'
       }
     },
-    calculateBorderDistance(shape1, shape2, ) {
-      // Assume shape1 and shape2 have properties x, y, width, height
 
-      // Calculate the horizontal distance
-      const horizontalDistance = this.calculateHorizontalDistance(shape1, shape2)
-      // console.log('horizontalDistance')
-      // console.log(horizontalDistance)
-
-      // Calculate the vertical distance
-      const verticalDistance = this.calculateVerticalDistance(shape1, shape2)
-      // console.log('verticalDistance')
-      // console.log(verticalDistance)
-
-
-      return { horizontalDistance, verticalDistance }
-    },
-
-    calculateHorizontalDistance(shape1, shape2) {
-
-        // console.log(rightSideDifference)
-        // console.log(leftSideDifference)
-
-      // Left edge of the rightmost shape
-      const leftEdgeOfRightShape = Math.min(shape1.x, shape2.x)
-
-      // Distance is the difference between these edges
-      return leftEdgeOfRightShape
-    },
-
-    calculateVerticalDistance(shape1, shape2) {
-      // Bottom edge of the topmost shape
-      const bottomEdgeOfTopShape = Math.max(shape1.y + this.shapeSizes[this.shapeIndex].height, shape2.y + this.shapeSizes[this.otherShapeIndex].height)
-
-      // Top edge of the bottommost shape
-      const topEdgeOfBottomShape = Math.min(shape1.y, shape2.y)
-
-      // Distance is the difference between these edges
-      return Math.max(0, topEdgeOfBottomShape - bottomEdgeOfTopShape)
-    },
     calculateDistance(x1, y1, x2, y2) {
       return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
     },
