@@ -51,6 +51,10 @@ export default {
           height: 100,
           width: 40
         },
+        {
+          height: 100,
+          width: 40
+        },
       ],
       shapes: [
         {
@@ -333,6 +337,71 @@ export default {
               // Draw the top horizontal line
               context.lineTo(startX + pieceWidth, startY);
 
+              // Create the outward tab on the right side
+              context.lineTo(startX + pieceWidth, startY + pieceHeight / 2 - tabWidth / 2);
+              context.quadraticCurveTo(
+                  startX + pieceWidth + tabHeight, startY + pieceHeight / 2, // Control point for right tab
+                  startX + pieceWidth, startY + pieceHeight / 2 + tabWidth / 2 // End point for right tab
+              );
+
+              // Draw the right vertical line
+              context.lineTo(startX + pieceWidth, startY + pieceHeight);
+
+              // Draw the bottom horizontal line
+              context.lineTo(startX, startY + pieceHeight);
+
+              // Create the outward tab on the left side
+              context.lineTo(startX, startY + pieceHeight / 2 + tabWidth / 2);
+              context.quadraticCurveTo(
+                  startX - tabHeight, startY + pieceHeight / 2, // Control point for left tab
+                  startX, startY + pieceHeight / 2 - tabWidth / 2 // End point for left tab
+              );
+
+              // Draw the left vertical line
+              context.lineTo(startX, startY);
+
+              // Close the path
+              context.closePath();
+
+
+              // Style the shape
+              context.fillStyle = 'pink'
+              context.fill()
+              context.lineWidth = 2
+              context.strokeStyle = 'black'
+              context.stroke()
+              context.fillStrokeShape(shape)
+            },
+            fill: '#00D2FF',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+          },
+          horizontal: true,
+          left: 'out',
+          right: 'out',
+          top: 'empty',
+          bottom: 'empty',
+        },
+        {
+          config: {
+            sceneFunc: (context, shape) => {
+              // Define puzzle piece parameters
+              const startX = 50; // X-coordinate where the puzzle piece starts
+              const startY = 50; // Y-coordinate where the puzzle piece starts
+              const pieceWidth = 40; // The width of the puzzle piece
+              const pieceHeight = 100; // The height of the puzzle piece
+              const tabWidth = 20; // The width of the tabs
+              const tabHeight = 20; // The height of the tabs
+
+              context.beginPath();
+
+              // Start at the top-left corner of the puzzle piece
+              context.moveTo(startX, startY);
+
+              // Draw the top horizontal line
+              context.lineTo(startX + pieceWidth, startY);
+
               // Draw the right vertical line
               context.lineTo(startX + pieceWidth, startY + pieceHeight / 2 - tabWidth / 2);
 
@@ -426,7 +495,14 @@ export default {
 
           if (clip === 'right clip') {
             shape.position({
-              x: otherShapePos.x - this.shapeSizes[this.shapeIndex].width,
+              x: otherShapePos.x - this.shapeSizes[this.shapeIndex].width - 3,
+              y: otherShapePos.y
+            })
+          }
+
+          if (clip === 'left clip') {
+            shape.position({
+              x: otherShapePos.x + this.shapeSizes[this.shapeIndex].width + 3,
               y: otherShapePos.y
             })
           }
@@ -441,7 +517,7 @@ export default {
       return Math.abs(shape1.x + this.shapeSizes[this.shapeIndex].width - shape2.x)
     },
     getLeftSideDifference(shape1, shape2) {
-      return Math.abs(shape1.x - shape2.x  + this.shapeSizes[this.otherShapeIndex].width)
+      return Math.abs(shape1.x - shape2.x  - this.shapeSizes[this.otherShapeIndex].width)
     },
     getTopDifference(shape1, shape2) {
       return Math.abs(shape1.y - shape2.y - this.shapeSizes[this.otherShapeIndex].height)
@@ -454,6 +530,7 @@ export default {
       const leftSideDifference =  this.getLeftSideDifference(shape1, shape2)
       const topDifference =  this.getTopDifference(shape1, shape2)
       const bottomDifference =  this.getBottomDifference(shape1, shape2)
+
 
       let shape1MiddleY = shape1.y + (this.shapeSizes[this.shapeIndex].height / 2) - 10
       let shape2MiddleY = shape2.y + (this.shapeSizes[this.otherShapeIndex].height / 2) - 10
