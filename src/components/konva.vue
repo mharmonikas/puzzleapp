@@ -43,6 +43,14 @@ export default {
           height: 30,
           width: 100
         },
+        {
+          height: 100,
+          width: 40
+        },
+        {
+          height: 100,
+          width: 40
+        },
       ],
       shapes: [
         {
@@ -241,6 +249,137 @@ export default {
           top: 'out',
           bottom: 'out',
         },
+        {
+          config: {
+            sceneFunc: (context, shape) => {
+              // Define puzzle piece parameters
+              const startX = 50; // X-coordinate where the puzzle piece starts
+              const startY = 50; // Y-coordinate where the puzzle piece starts
+              const pieceWidth = 40; // The width of the puzzle piece
+              const pieceHeight = 100; // The height of the puzzle piece
+              const tabWidth = 20; // The width of the tabs
+              const tabHeight = 20; // The height of the tabs
+
+              context.beginPath();
+
+              // Start at the top-left corner of the puzzle piece
+              context.moveTo(startX, startY);
+
+              // Draw the top horizontal line
+              context.lineTo(startX + pieceWidth, startY);
+
+              // Create the outward tab on the right side
+              context.lineTo(startX + pieceWidth, startY + pieceHeight / 2 - tabWidth / 2);
+              context.quadraticCurveTo(
+                  startX + pieceWidth + tabHeight, startY + pieceHeight / 2, // Control point for right tab
+                  startX + pieceWidth, startY + pieceHeight / 2 + tabWidth / 2 // End point for right tab
+              );
+
+              // Draw the right vertical line
+              context.lineTo(startX + pieceWidth, startY + pieceHeight);
+
+              // Draw the bottom horizontal line
+              context.lineTo(startX, startY + pieceHeight);
+
+              // Create the outward tab on the left side
+              context.lineTo(startX, startY + pieceHeight / 2 + tabWidth / 2);
+              context.quadraticCurveTo(
+                  startX - tabHeight, startY + pieceHeight / 2, // Control point for left tab
+                  startX, startY + pieceHeight / 2 - tabWidth / 2 // End point for left tab
+              );
+
+              // Draw the left vertical line
+              context.lineTo(startX, startY);
+
+              // Close the path
+              context.closePath();
+
+
+              // Style the shape
+              context.fillStyle = 'pink'
+              context.fill()
+              context.lineWidth = 2
+              context.strokeStyle = 'black'
+              context.stroke()
+              context.fillStrokeShape(shape)
+            },
+            fill: '#00D2FF',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+          },
+          horizontal: true,
+          left: 'out',
+          right: 'out',
+          top: 'empty',
+          bottom: 'empty',
+        },
+        {
+          config: {
+            sceneFunc: (context, shape) => {
+              // Define puzzle piece parameters
+              const startX = 50; // X-coordinate where the puzzle piece starts
+              const startY = 50; // Y-coordinate where the puzzle piece starts
+              const pieceWidth = 40; // The width of the puzzle piece
+              const pieceHeight = 100; // The height of the puzzle piece
+              const tabWidth = 20; // The width of the tabs
+              const tabHeight = 20; // The height of the tabs
+
+              context.beginPath();
+
+              // Start at the top-left corner of the puzzle piece
+              context.moveTo(startX, startY);
+
+              // Draw the top horizontal line
+              context.lineTo(startX + pieceWidth, startY);
+
+              // Draw the right vertical line
+              context.lineTo(startX + pieceWidth, startY + pieceHeight / 2 - tabWidth / 2);
+
+              // Create the inward tab on the right side
+              context.quadraticCurveTo(
+                  startX + pieceWidth - tabHeight, startY + pieceHeight / 2, // Control point for right tab
+                  startX + pieceWidth, startY + pieceHeight / 2 + tabWidth / 2 // End point for right tab
+              );
+
+              // Continue the right vertical line
+              context.lineTo(startX + pieceWidth, startY + pieceHeight);
+
+              // Draw the bottom horizontal line
+              context.lineTo(startX, startY + pieceHeight);
+
+              // Create the inward tab on the left side
+              context.lineTo(startX, startY + pieceHeight / 2 + tabWidth / 2);
+              context.quadraticCurveTo(
+                  startX + tabHeight, startY + pieceHeight / 2, // Control point for left tab
+                  startX, startY + pieceHeight / 2 - tabWidth / 2 // End point for left tab
+              );
+
+              // Draw the left vertical line
+              context.lineTo(startX, startY);
+
+              // Close the path
+              context.closePath();
+
+              // Style the shape
+              context.fillStyle = 'pink';
+              context.fill();
+              context.lineWidth = 2;
+              context.strokeStyle = 'black';
+              context.stroke();
+              context.fillStrokeShape(shape);
+            },
+            fill: '#00D2FF',
+            stroke: 'black',
+            strokeWidth: 4,
+            draggable: true
+          },
+          horizontal: true,
+          left: 'in',
+          right: 'in',
+          top: 'empty',
+          bottom: 'empty',
+        },
       ],
       shapeIndex: 0,
       otherShapeIndex: 0,
@@ -268,6 +407,7 @@ export default {
           )
 
           let clip = this.getClip(distance, shapePos, otherShapePos)
+          console.log(clip)
 
 
           if (clip === 'top clip') {
@@ -281,6 +421,13 @@ export default {
             shape.position({
               x: otherShapePos.x + (this.shapeSizes[this.otherShapeIndex].width / 2) - (this.shapeSizes[this.shapeIndex].width / 2),
               y: otherShapePos.y - this.shapeSizes[this.shapeIndex].height -3
+            })
+          }
+
+          if (clip === 'right clip') {
+            shape.position({
+              x: otherShapePos.x - this.shapeSizes[this.shapeIndex].width,
+              y: otherShapePos.y
             })
           }
 
