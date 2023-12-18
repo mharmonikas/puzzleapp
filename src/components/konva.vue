@@ -447,6 +447,7 @@ export default {
       ],
       shapeIndex: 0,
       otherShapeIndex: 0,
+      audio: new Audio('click.wav')
     }
   },
   methods: {
@@ -471,14 +472,13 @@ export default {
           )
 
           let clip = this.getClip(distance, shapePos, otherShapePos)
-          console.log(clip)
-
 
           if (clip === 'top clip') {
             shape.position({
               x: otherShapePos.x + (this.shapeSizes[this.otherShapeIndex].width / 2) - (this.shapeSizes[this.shapeIndex].width / 2),
               y: otherShapePos.y + this.shapeSizes[this.otherShapeIndex].height + 3
             })
+            this.audio.play()
           }
 
           if (clip === 'bottom clip') {
@@ -486,6 +486,7 @@ export default {
               x: otherShapePos.x + (this.shapeSizes[this.otherShapeIndex].width / 2) - (this.shapeSizes[this.shapeIndex].width / 2),
               y: otherShapePos.y - this.shapeSizes[this.shapeIndex].height -3
             })
+            this.audio.play()
           }
 
           if (clip === 'right clip') {
@@ -493,6 +494,7 @@ export default {
               x: otherShapePos.x - this.shapeSizes[this.shapeIndex].width - 3,
               y: otherShapePos.y
             })
+            this.audio.play()
           }
 
           if (clip === 'left clip') {
@@ -500,6 +502,7 @@ export default {
               x: otherShapePos.x + this.shapeSizes[this.shapeIndex].width + 3,
               y: otherShapePos.y
             })
+            this.audio.play()
           }
 
           // Redraw the layer to update the position
@@ -572,6 +575,10 @@ export default {
     bottomSideMatch() {
       return this.shapes[this.shapeIndex].bottom !== this.shapes[this.otherShapeIndex].top
     }
-  }
+  },
+  created() {
+
+  },
+
 }
 </script>
